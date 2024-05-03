@@ -1,0 +1,34 @@
+Metadata-Version: 2.1
+Name: ctrlx-fbs
+Version: 2.1.0
+Summary: Python generated fbs
+Home-page: https://github.com/boschrexroth/ctrlx-automation-sdk/
+Author: Bosch Rexroth AG
+Author-email: github@boschrexroth.com
+License: UNKNOWN
+Platform: linux
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Operating System :: POSIX :: Linux
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: boschrexroth_tac_delivery.txt
+
+# Python generated fbs
+
+Auto generated python files from all fbs files including the sdk
+
+## Installation
+
+Use the package manager [pip3](https://pip.pypa.io/en/stable/) to install ctrlx-fbs.
+
+```bash
+pip3 install ctrlx-fbs
+```
+
+## License
+
+SPDX-FileCopyrightText: Bosch Rexroth AG
+SPDX-License-Identifier: MIT
+
+Python generated fbs is licensed under [T&C](https://dc-corp.resource.bosch.com/media/xc/boschrexroth_tac_delivery.pdf) or see 'boschrexroth_tac_delivery.txt' as part of this package.
+

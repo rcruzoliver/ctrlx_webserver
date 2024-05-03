@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMI</title>
+ 
+    <style>
+        /* CSS styles go here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+ 
+        .header-bar {
+            background-color: white;
+            color: #333;
+ 
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+ 
+        .gripper-state {
+            margin-right: 20px;
+            justify-content: start;
+            /* Align items to the start of the container */
+            gap: 10px;
+            /* Adds space between buttons */
+        }
+ 
+ 
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+ 
+        .current-position,
+        .target-position {
+            margin-top: 50px;
+        }
+ 
+        .speed-control {
+            display: flex;
+            /* Use flexbox to layout children side by side */
+            align-items: center;
+            /* Align items vertically in the center */
+            gap: 10px;
+        }
+ 
+        .status,
+        .current-position,
+        .target-position,
+        .input-output,
+        .buttons {
+            justify-content: start;
+            /* Align items to the start of the container */
+            gap: 10px;
+            /* Adds space between buttons */
+        }
+ 
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+        }
+ 
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+ 
+        .label-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            margin-right: 20px;
+            
+        }
+ 
+        label {
+            margin-right: 10px;
+        }
+ 
+        input[type="text"],
+        input[type="number"] {
+            padding: 5px;
+            margin-left: auto;
+        }
+ 
+        input[type="range"] {
+            width: 100%;
+            margin-top: 10px;
+            /* Adjusted */
+        }
+ 
+        .target-and-image-container {
+            display: flex;
+            align-items: start;
+            /* Align at the top */
+        }
+ 
+        .button {
+            padding: 10px 20px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+            border-radius: 0;
+            /* Make buttons rectangular */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            background-color: #3498db;
+            /* Sky blue background for all buttons */
+            color: white;
+            /* White text for better readability */
+        }
+ 
+        .button:hover {
+            transform: translateY(-2px);
+        }
+ 
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+ 
+        .logo img {
+            width: 150px;
+            /* or any desired width */
+            height: auto;
+            /* maintain aspect ratio */
+        }
+ 
+        .divider-block {
+            width: 30px;
+        }
+ 
+        .slider-buttons-container {
+            /*margin-right: 20%;*/
+        }
+ 
+        #geschwindigkeit-slider {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+ 
+        #geschwindigkeit-value {
+            display: inline-block;
+            width: 50px;
+            text-align: right;
+            white-space: nowrap;
+        }
+ 
+ 
+        .robot-image {
+            width: 200px;
+            /* Adjust the width as needed */
+            height: auto;
+            /* Maintain aspect ratio */
+            margin-left: 200px;
+            /* Space between Zielposition and image */
+        }
+ 
+        .button:disabled {
+            background-color: #cccccc;
+            /* Grayish color */
+            cursor: not-allowed;
+            /* Change cursor to indicate it's not clickable */
+        }
+    </style>
+    <script>
+ 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Update Geschwindigkeit value display
+            document.getElementById('geschwindigkeit-slider').oninput = function () {
+                document.getElementById('geschwindigkeit-value').textContent = document.getElementById('geschwindigkeit-slider').value; // Append '%' for display
+            };
+        });
+ 
+        function startFetchingActualValues() {
+            fetchActualValues();
+            setInterval(fetchActualValues, 500);
+        }
+ 
+        // Function to fetch actual values from the server
+        function fetchActualValues() {
+            fetch('/lin-rob/api/datalayer/get-actual-values')
+                .then(response => response.json())
+                .then(data => {
+                    fetchRobotStatus()
+                    // Update the Aktuelle Position fields
+                    document.getElementById('x-pos').textContent = data.message[0].toFixed(2) + ' mm';
+                    document.getElementById('y-pos').textContent = data.message[1].toFixed(2) + ' mm';
+                    document.getElementById('z-pos').textContent = data.message[2].toFixed(2) + ' mm';
+                    document.getElementById('distance').textContent = data.message[3].toFixed(2) + ' mm';
+                    document.getElementById('rotation').textContent = data.message[4].toFixed(2) + ' %';
+                    document.getElementById('greifer-state').textContent = data.message[5] === true ? "Open" : "Closed";
+                    })
+                .catch(error => console.error('Error fetching actual values:', error));
+        }
+ 
+ 
+        // Fetch robot status
+ 
+        function fetchRobotStatus() {
+            var status = fetch('/lin-rob/api/datalayer/fetch-robot-status')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log the received data for debugging
+                    document.getElementById('robot-status').textContent = data.status;
+                    if (data.status === "ERROR" || data.status === "DISABLED" || data.status === "STANDBY") {
+                        document.getElementById('stop-button').disabled = true;
+                    } else {
+                        document.getElementById('stop-button').disabled = false;
+                    }
+ 
+                    if (data.status === "STANDBY") {
+                        document.getElementById('start-button').disabled = false;
+                    } else {
+                        document.getElementById('start-button').disabled = true;
+                    }
+ 
+                    if(data.status === "DISABLED")
+                    {
+                        document.getElementById('power-button').disabled = false;
+                    }
+                    else{
+                        document.getElementById('power-button').disabled = true;
+                    }
+                })
+                .catch(error => console.error('Error fetching robot status:', error));
+        }
+ 
+        // Function to send Zielposition and Geschwindigkeit values to the server
+        function setTargetValue() {
+                const xTarget = document.getElementById('x-target').value;
+                const yTarget = document.getElementById('y-target').value;
+                const zTarget = document.getElementById('z-target').value;
+                const speed = document.querySelector('.speed-control input[type="range"]').value;
+ 
+                const data = {
+                    x: xTarget,
+                    y: yTarget,
+                    z: zTarget,
+                    speed: speed
+                };
+ 
+                fetch('/lin-rob/api/datalayer/set-target-values', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        }
+ 
+        // Kinematics start and atop api go here.
+        function startKinematics() {
+            setTargetValue();
+        }
+ 
+        function startPower(){
+            fetch('/lin-rob/api/datalayer/set-power', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(true)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        }
+ 
+        function stopKinematics() {
+            fetch('/lin-rob/api/datalayer/stop-kinematics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify("stop")
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        }
+ 
+        window.onload = startFetchingActualValues()
+ 
+ 
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+ 
+<body>
+    <header class="header-bar">
+        <div class="logo">
+            <img src="/lin-rob/static/images/ctrlx-logo.webp" class="logo-img">
+            <span>Unternehmen X</span>
+        </div>
+    </header>
+    <div class="container">
+ 
+        <div class="status">
+            <h2>Kartesische Robot</h2>
+            <div>Status: <span id="robot-status" class="robot-status">Standstill</span></div>
+        </div>
+        <div class="flex-row">
+            <div class="current-position flex-col">
+                <h3>Aktuelle Position</h3>
+                <div class="label-input-group">
+                    <label for="x-pos">X:</label>
+                    <span id="x-pos">0 mm</span>
+                </div>
+                <div class="label-input-group">
+                    <label for="y-pos">Y:</label>
+                    <span id="y-pos">0 mm</span>
+                </div>
+                <div class="label-input-group">
+                    <label for="z-pos">Z:</label>
+                    <span id="z-pos">0 mm</span>
+                </div>
+            </div>
+            <div class="target-and-image-container">
+                <div class="target-position flex-col">
+                    <h3>Zielposition</h3>
+                    <div class="label-input-group">
+                        <label for="x-target">X:</label>
+                        <input type="text" id="x-target" name="x-target" placeholder="mm">
+                    </div>
+                    <div class="label-input-group">
+                        <label for="y-target">Y:</label>
+                        <input type="text" id="y-target" name="y-target" placeholder="mm">
+                    </div>
+                    <div class="label-input-group">
+                        <label for="z-target">Z:</label>
+                        <input type="text" id="z-target" name="z-target" placeholder="mm">
+                    </div>
+                </div>
+                <!--img class="robot-image" src="../static/images/ARM2692_01z.webp"-->
+            </div>
+        </div>
+        <div class="input-ouput flex-row">
+            <div class="gripper-state flex-col">
+                <h3>Eingang/Ausgang</h3>
+                <div class="label-input-group"> 
+                    <label>Greifer: </label>
+                    <span id="greifer-state" class="gripper-state">OPEN</span></div>
+                <div class="label-input-group">
+                    <label for="distance">Abstand:</label>
+                    <span id="distance">0 mm</span>
+                </div>
+                <div class="label-input-group">
+                    <label for="rotation">Drehachse:</label>
+                    <span id="rotation">0%</span>
+                </div>
+            </div>
+            <div class="slider-buttons-container">
+                <div class="speed-control">
+                    <h3>Geschwindigkeit</h3>
+                    <input id="geschwindigkeit-slider" type="range" min="0" max="100" value="50">
+                    <span id="geschwindigkeit-value">50</span>%
+                </div>
+                <div class="buttons">
+                    <button class="button" id="start-button" onclick="startKinematics() ">Starten</button>
+                    <button class="button" id="stop-button" onclick="stopKinematics()">Stoppen</button>
+                    <button class="button" id="power-button" onclick="startPower()">
+                        <i class="fas fa-power-off"></i> Power
+                    </button>
+ 
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+ 
+</html>

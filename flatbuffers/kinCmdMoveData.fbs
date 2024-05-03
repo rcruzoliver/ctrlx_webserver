@@ -1,0 +1,21 @@
+include "dynamicLimits.fbs";
+
+namespace motion.core.fbtypes;
+
+/// parameters for the move linear commands for a kinematics
+table KinCmdMoveData {
+
+  /// commanded target position (or increment for relative position command)
+  kinPos:[double];
+
+  /// coordSys for commanded target position
+  coordSys:string;
+
+  /// dynamic limits for the motion of this command
+  lim:DynamicLimits;
+
+  /// should this be a buffered command?
+  buffered:bool = true;
+}
+
+root_type KinCmdMoveData;

@@ -1,0 +1,13 @@
+namespace motion.core.fbtypes;
+
+/// parameters of the axis command add-to-kin
+table AxsCmdAddToKinData {
+
+  /// name of the kinematics to which this axis should be added
+  kinName:string;
+
+  /// should this be a buffered command?
+  buffered:bool;
+}
+
+root_type AxsCmdAddToKinData;

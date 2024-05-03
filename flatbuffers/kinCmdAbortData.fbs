@@ -1,0 +1,26 @@
+namespace motion.core.fbtypes;
+
+/// type of the brake limit
+enum BrakeLimit : byte {
+
+  /// brake with commanded dynamics limits (soft stop)
+  LAST_COMMANDED_LIMITS,
+
+  /// brake with reduced axis limits (on commanded path)
+  REDUCED_AXIS_LIMITS,
+
+  /// brake with configured axis limits (on commanded path)
+  CONFIGURED_AXIS_LIMITS,
+
+}
+
+
+/// Command data for kinAbort command and kinInterrupt command
+table KinCmdAbortData {
+
+  /// dynamic limits of the deceleration ramp (default is "soft stop")
+  type:BrakeLimit = LAST_COMMANDED_LIMITS;
+
+}
+
+root_type KinCmdAbortData;

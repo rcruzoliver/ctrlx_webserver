@@ -1,0 +1,30 @@
+namespace motion.core.fbtypes;
+
+/// actual values of the kinematics
+table KinActualValues {
+
+  /// actual position
+  actualPos:[double];
+
+  /// actual velocity (currently not supported)
+  actualVel:double;
+
+  /// actual acceleration (currently not supported)
+  actualAcc:double;
+
+  /// actual jerk (currently not supported)
+  actualJerk:double;
+
+
+
+  /// units of the actual position
+  actualPosUnit:[string];
+  /// unit of the actual velocity (currently not supported)
+  actualVelUnit:string;
+  /// unit of the actual acceleration (currently not supported)
+  actualAccUnit:string;
+  /// unit of the actual jerk (currently not supported)
+  actualJerkUnit:string;
+}
+
+root_type KinActualValues;

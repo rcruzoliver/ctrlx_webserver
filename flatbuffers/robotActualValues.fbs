@@ -1,0 +1,14 @@
+namespace robot.core.fbtypes;
+
+/// actual values of the kinematics
+table RobotActualValues {
+
+  /// actual position
+  actualPosX:double;
+
+  actualPosY:double;
+  
+  actualPosZ:double;
+}
+
+root_type RobotActualValues;

@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.header-bar {
+    background-color: white;
+    color: #333;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: 86px;
+    height: 40px;
+    margin-right: 15px;
+}
+
+main {
+    height: calc(100vh - 50px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Change this from center to flex-start to align to the left */
+    padding-left: 20px; /* Add some padding so it's not directly against the edge */
+}
+
+.button-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: white;
+    width: 200px;
+}
+
+button[data-state="clicked"] {
+    background-color: #2ecc71;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.volume-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;  /* Centering the volume slider in the page. You can adjust as needed. */
+    margin: 20px 0;
+}
+
+#volumeSlider {
+    margin: 0 10px;
+    width: 300px;  /* Adjust this for the desired width of the slider */
+}
+
+#volumeValue {
+    width: 50px;
+    text-align: center;
+}
+
+label {
+    margin-right: 30px;  /* Adds spacing between the label and the button */
+}
+
+div {
+    margin-bottom: 15px;
+}

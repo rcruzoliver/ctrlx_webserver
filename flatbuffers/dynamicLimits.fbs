@@ -1,0 +1,22 @@
+namespace motion.core.fbtypes;
+
+/// set of dynamic limits (for commands)
+table DynamicLimits {
+
+  /// velocity limit (must be greater than zero)
+        vel:double = 0.0;
+
+  /// acceleration limit (must be greater than zero)
+        acc:double = 0.0;
+
+  /// deceleration limit (must be greater than zero)
+        dec:double = 0.0;
+
+  /// acceleration jerk limit (must be greater than zero OR zero for not jerk limited motion)
+        jrkAcc:double = 0.0;
+
+  /// deceleration jerk limit (must be greater than zero OR zero for not jerk limited motion)
+        jrkDec:double = 0.0;
+}
+
+root_type DynamicLimits;

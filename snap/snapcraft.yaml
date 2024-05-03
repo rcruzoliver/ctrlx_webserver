@@ -1,0 +1,88 @@
+name: sdk-py-webserver-flask-linrob
+version: 2.0.0
+summary: Data Layer provider sample written in Python for ctrlX
+title: sdk-py-webserver-flask-linrob
+description: |
+  This sample shows how to provide data to the ctrlX Data Layer
+base: core22
+confinement: strict
+grade: stable
+
+apps:
+  webserver:
+    command: bin/main.py
+    plugs:
+      - network
+      - network-bind
+      - datalayer
+      - active-solution
+    slots:
+      - package-assets
+      - package-run
+    daemon: simple
+    restart-condition: always
+    passthrough:   
+      restart-delay: 10s
+
+parts:
+  webserver:
+    plugin: python
+    source: .
+    stage-packages:
+      - libzmq5
+      - ctrlx-datalayer
+  
+  bfbs:
+    plugin: dump
+    source: ./bfbs
+    organize:
+      '*': bfbs/
+
+  mddb:
+    plugin: dump
+    source: ./mddb
+    organize:
+      '*': mddb/
+  
+  templates:
+    plugin: dump
+    source: ./templates
+    organize:
+      '*': templates/
+
+  static:
+    plugin: dump
+    source: ./static
+    organize:
+      '*': static/
+
+  configs:
+    source: ./configs
+    plugin: dump
+    organize:
+      'package-assets/*': package-assets/${SNAPCRAFT_PROJECT_NAME}/
+
+slots:
+  package-assets:
+    interface: content
+    content: package-assets
+    source:
+      read:
+        - $SNAP/package-assets/${SNAPCRAFT_PROJECT_NAME}
+  package-run:
+    interface: content
+    content: package-run
+    source:
+      write:
+        - $SNAP_DATA/package-run/${SNAPCRAFT_PROJECT_NAME}
+
+plugs:
+  datalayer:
+    interface: content
+    content: datalayer
+    target: $SNAP_DATA/.datalayer
+
+  active-solution:
+    interface: content
+    content: solutions
+    target: $SNAP_COMMON/solutions
