@@ -92,6 +92,21 @@ def addToKin(kin: str, buffered: bool):
     
     return variantFlatbuffers
 
+def removeFromKin(kin: str, buffered: bool):
+    builder = flatbuffers.Builder(1024)
+    kinfb = builder.CreateString(kin)
+    
+    AxsCmdAddToKinDataStart(builder)
+    AxsCmdAddToKinDataAddKinName(builder, kinfb)
+    AxsCmdAddToKinDataAddBuffered(builder, buffered)
+    axs_cmd_abort_data = AxsCmdAddToKinDataEnd(builder)
+    
+    builder.Finish(axs_cmd_abort_data)
+    variantFlatbuffers = Variant()
+    variantFlatbuffers.set_flatbuffers(builder.Output())
+    
+    return variantFlatbuffers
+
 
 def kinCmdAbortData():
     builder = flatbuffers.Builder(1024)

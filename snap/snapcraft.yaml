@@ -1,9 +1,9 @@
-name: sdk-py-webserver-flask-linrob
-version: 2.0.0
-summary: Data Layer provider sample written in Python for ctrlX
-title: sdk-py-webserver-flask-linrob
+name: ctrlx-linrob
+version: 2.4.0
+summary: Webserver UI to command cartesian robot using motion app.
+title: ctrlx-linrob
 description: |
-  This sample shows how to provide data to the ctrlX Data Layer
+  Webserver user interface to command a cartesian robot using ctrlX official motion app. Demo example from DCEM for LinRob.
 base: core22
 confinement: strict
 grade: stable

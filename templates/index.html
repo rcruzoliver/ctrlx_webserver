@@ -173,6 +173,7 @@
         }
     </style>
     <script>
+        var power = false;
  
         document.addEventListener('DOMContentLoaded', function () {
             // Update Geschwindigkeit value display
@@ -271,7 +272,9 @@
         }
  
         function startPower(){
-            fetch('/lin-rob/api/datalayer/set-power', {
+            if (!power){
+                // Power on
+                fetch('/lin-rob/api/datalayer/set-power', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -285,6 +288,27 @@
                     .catch((error) => {
                         console.error('Error:', error);
                     });
+
+                power = true;
+            }
+            else{
+                // Power off
+                fetch('/lin-rob/api/datalayer/set-power-off', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(true)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                power = false;
+            }
         }
  
         function stopKinematics() {

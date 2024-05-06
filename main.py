@@ -37,6 +37,7 @@ from fbsFunction import (
     getActualValues,
     setRobotActualValues,
     addToKin,
+    removeFromKin,
     kinCmdAbortData,
     setKinCmdMove    
 )
@@ -141,6 +142,37 @@ def set_power_value():
     result = datalayer_client.create_sync("motion/axs/AxisX/cmd/add-to-kin",variantFlatbuffersX)
     result = datalayer_client.create_sync("motion/axs/AxisY/cmd/add-to-kin",variantFlatbuffersY)
     result = datalayer_client.create_sync("motion/axs/AxisZ/cmd/add-to-kin",variantFlatbuffersZ)  
+    
+    return jsonify({"message": "Values changed!!"})
+
+@bp.route('/api/datalayer/set-power-off', methods=['POST'])
+def set_power_value_off():
+
+    variantBoolean = Variant()
+    variantBoolean.set_bool8(True)
+    result = datalayer_client.create_sync("motion/kin/Kinematics/cmd/group-dis", variantBoolean)
+
+    variantFlatbuffersX = removeFromKin("Kinematics", False)
+    variantFlatbuffersY = removeFromKin("Kinematics", False)
+    variantFlatbuffersZ = removeFromKin("Kinematics", False)
+    
+    result = datalayer_client.create_sync("motion/axs/AxisX/cmd/rem-frm-kin",variantFlatbuffersX)
+    result = datalayer_client.create_sync("motion/axs/AxisY/cmd/rem-frm-kin",variantFlatbuffersY)
+    result = datalayer_client.create_sync("motion/axs/AxisZ/cmd/rem-frm-kin",variantFlatbuffersZ)  
+
+    variantBoolean = Variant()
+    variantBoolean.set_bool8(False)
+    result = datalayer_client.create_sync("motion/axs/AxisX/cmd/power",variantBoolean)
+    
+    variantBoolean = Variant()
+    variantBoolean.set_bool8(False)
+    result = datalayer_client.create_sync("motion/axs/AxisY/cmd/power",variantBoolean)
+    
+    variantBoolean = Variant()
+    variantBoolean.set_bool8(False)
+    result = datalayer_client.create_sync("motion/axs/AxisZ/cmd/power",variantBoolean)    
+    
+
     
     return jsonify({"message": "Values changed!!"})
 

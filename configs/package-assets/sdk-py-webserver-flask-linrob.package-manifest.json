@@ -27,9 +27,9 @@
       {
         "id": "webserver-flask",
         "target": "_blank",
-        "title": "Python-Webserver",
+        "title": "Linrob",
         "icon": "Bosch-Ic-worldwideweb",
-        "link": ":5000/lin-rob"
+        "link": "https://127.0.0.1:5000/lin-rob/"
       }
     ],
     "settings": [
@@ -37,9 +37,9 @@
     "overview": [
       {
         "id": "webserver-flask",
-        "title": "Python-Webserver",
+        "title": "Linrob",
         "icon": "Bosch-Ic-worldwideweb",
-        "link": ":5000/lin-rob"
+        "link": "https://127.0.0.1:5000/lin-rob/"
       }
     ]    
   },  
