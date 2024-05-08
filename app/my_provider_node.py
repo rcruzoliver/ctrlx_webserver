@@ -112,7 +112,7 @@ class MyProviderNode:
         cb: NodeCallback,
     ):
         
-        if(address=="sdk-py-provider/app-cmd"):
+        if(address=="webserver/app-cmd"):
             resultVariant = Variant()
             if(data.get_string()=="save"):
                 if self._app_data_control.set_default():

@@ -1,0 +1,57 @@
+{
+  "version": "2.4.0",
+  "id": "ctrlx-webserver",
+  "scopes-declaration": [
+    {
+      "identifier": "ctrlx-webserver.web",
+      "name": "Python-Webserver",
+      "description": "Data Layer access permissions over webpage",
+      "scopes": [
+        {
+          "identifier": "ctrlx-webserver.r",
+          "name": "Read",
+          "description": "Only read commands can be submitted over webpage"
+        },
+        {
+          "identifier": "ctrlx-webserver.rw",
+          "name": "Read and write",
+          "description": "Read and write commands can be submitted over webpage"
+        }
+      ]
+    }
+  ],
+  "services": {
+  },
+  "menus": {
+    "sidebar": [
+      {
+        "id": "webserver",
+        "target": "_blank",
+        "title": "Webserver",
+        "icon": "Bosch-Ic-worldwideweb",
+        "link": "https://127.0.0.1:5000/webserver/"
+      }
+    ],
+    "settings": [
+    ],
+    "overview": [
+      {
+        "id": "webserver",
+        "title": "Webserver",
+        "icon": "Bosch-Ic-worldwideweb",
+        "link": "https://127.0.0.1:5000/webserver/"
+      }
+    ]    
+  },  
+  "configuration": {
+    "appDirectories": [
+      {
+        "name": "AppDataSamplePy",
+        "description": "Python AppData Sample",
+        "icon": "bosch-ic-directory",
+        "scopes": [],
+        "copyOnLoad": true
+      }
+    ]
+  }
+}

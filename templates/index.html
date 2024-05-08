@@ -11,13 +11,12 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #f4f4f4;
+            background-color: #e7e7e7;
         }
  
         .header-bar {
-            background-color: white;
+            background-color: rgb(255, 255, 255);
             color: #333;
- 
             display: flex;
             align-items: center;
             font-weight: bold;
@@ -189,7 +188,7 @@
  
         // Function to fetch actual values from the server
         function fetchActualValues() {
-            fetch('/lin-rob/api/datalayer/get-actual-values')
+            fetch('/webserver/api/datalayer/get-actual-values')
                 .then(response => response.json())
                 .then(data => {
                     fetchRobotStatus()
@@ -199,7 +198,7 @@
                     document.getElementById('z-pos').textContent = data.message[2].toFixed(2) + ' mm';
                     document.getElementById('distance').textContent = data.message[3].toFixed(2) + ' mm';
                     document.getElementById('rotation').textContent = data.message[4].toFixed(2) + ' %';
-                    document.getElementById('greifer-state').textContent = data.message[5] === true ? "Open" : "Closed";
+                    document.getElementById('gripper-state').textContent = data.message[5] === true ? "Open" : "Closed";
                     })
                 .catch(error => console.error('Error fetching actual values:', error));
         }
@@ -208,7 +207,7 @@
         // Fetch robot status
  
         function fetchRobotStatus() {
-            var status = fetch('/lin-rob/api/datalayer/fetch-robot-status')
+            var status = fetch('/webserver/api/datalayer/fetch-robot-status')
                 .then(response => response.json())
                 .then(data => {
                     console.log(data); // Log the received data for debugging
@@ -250,7 +249,7 @@
                     speed: speed
                 };
  
-                fetch('/lin-rob/api/datalayer/set-target-values', {
+                fetch('/webserver/api/datalayer/set-target-values', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -272,9 +271,10 @@
         }
  
         function startPower(){
+            var button = document.getElementById("power-button");
             if (!power){
                 // Power on
-                fetch('/lin-rob/api/datalayer/set-power', {
+                fetch('/webserver/api/datalayer/set-power', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -290,10 +290,13 @@
                     });
 
                 power = true;
+
+                // Change the button's background color
+                button.style.backgroundColor = "green"; // Change this to whatever color you want
             }
             else{
                 // Power off
-                fetch('/lin-rob/api/datalayer/set-power-off', {
+                fetch('/webserver/api/datalayer/set-power-off', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -308,11 +311,13 @@
                         console.error('Error:', error);
                     });
                 power = false;
+                // Change the button's background color
+                button.style.backgroundColor = "red"; // Change this to whatever color you want
             }
         }
  
         function stopKinematics() {
-            fetch('/lin-rob/api/datalayer/stop-kinematics', {
+            fetch('/webserver/api/datalayer/stop-kinematics', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -338,19 +343,19 @@
 <body>
     <header class="header-bar">
         <div class="logo">
-            <img src="/lin-rob/static/images/ctrlx-logo.webp" class="logo-img">
-            <span>Unternehmen X</span>
+            <img src="/webserver/static/images/ctrlx-logo.webp" class="logo-img">
+            <span>Company X</span>
         </div>
     </header>
     <div class="container">
  
         <div class="status">
-            <h2>Kartesische Robot</h2>
+            <h2 style="color: rgb(0, 0, 0);">Cartesian Robot</h2>
             <div>Status: <span id="robot-status" class="robot-status">Standstill</span></div>
         </div>
         <div class="flex-row">
             <div class="current-position flex-col">
-                <h3>Aktuelle Position</h3>
+                <h3>Actual Position</h3>
                 <div class="label-input-group">
                     <label for="x-pos">X:</label>
                     <span id="x-pos">0 mm</span>
@@ -366,18 +371,18 @@
             </div>
             <div class="target-and-image-container">
                 <div class="target-position flex-col">
-                    <h3>Zielposition</h3>
+                    <h3>Target position (mm)</h3>
                     <div class="label-input-group">
                         <label for="x-target">X:</label>
-                        <input type="text" id="x-target" name="x-target" placeholder="mm">
+                        <input type="text" id="x-target" name="x-target" placeholder="mm" value="0">
                     </div>
                     <div class="label-input-group">
                         <label for="y-target">Y:</label>
-                        <input type="text" id="y-target" name="y-target" placeholder="mm">
+                        <input type="text" id="y-target" name="y-target" placeholder="mm" value="0">
                     </div>
                     <div class="label-input-group">
                         <label for="z-target">Z:</label>
-                        <input type="text" id="z-target" name="z-target" placeholder="mm">
+                        <input type="text" id="z-target" name="z-target" placeholder="mm" value="0">
                     </div>
                 </div>
                 <!--img class="robot-image" src="../static/images/ARM2692_01z.webp"-->
@@ -385,29 +390,29 @@
         </div>
         <div class="input-ouput flex-row">
             <div class="gripper-state flex-col">
-                <h3>Eingang/Ausgang</h3>
+                <h3>Input/Output</h3>
                 <div class="label-input-group"> 
-                    <label>Greifer: </label>
+                    <label>Gripper: </label>
                     <span id="greifer-state" class="gripper-state">OPEN</span></div>
                 <div class="label-input-group">
-                    <label for="distance">Abstand:</label>
+                    <label for="distance">Distance:</label>
                     <span id="distance">0 mm</span>
                 </div>
                 <div class="label-input-group">
-                    <label for="rotation">Drehachse:</label>
+                    <label for="rotation">Rotation axis:</label>
                     <span id="rotation">0%</span>
                 </div>
             </div>
             <div class="slider-buttons-container">
                 <div class="speed-control">
-                    <h3>Geschwindigkeit</h3>
+                    <h3>Velocity</h3>
                     <input id="geschwindigkeit-slider" type="range" min="0" max="100" value="50">
                     <span id="geschwindigkeit-value">50</span>%
                 </div>
                 <div class="buttons">
-                    <button class="button" id="start-button" onclick="startKinematics() ">Starten</button>
-                    <button class="button" id="stop-button" onclick="stopKinematics()">Stoppen</button>
-                    <button class="button" id="power-button" onclick="startPower()">
+                    <button class="button" id="start-button" onclick="startKinematics() ">Start</button>
+                    <button class="button" id="stop-button" onclick="stopKinematics()">Stop</button>
+                    <button class="button" id="power-button" onclick="startPower()" style="background-color: red;">
                         <i class="fas fa-power-off"></i> Power
                     </button>
  

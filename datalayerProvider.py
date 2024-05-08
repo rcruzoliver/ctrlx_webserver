@@ -23,7 +23,7 @@ from robot.core.fbtypes.RobotActualValues import (
 )
 
 # addresses of provided values
-address_base = "sdk-py-provider/"
+address_base = "webserver/"
 
 def register_fbs(provider: ctrlxdatalayer.provider, name: str, path: str):
     # Register Flatbuffer type

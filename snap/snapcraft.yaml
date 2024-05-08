@@ -1,9 +1,9 @@
-name: ctrlx-linrob
+name: ctrlx-webserver
 version: 2.4.0
 summary: Webserver UI to command cartesian robot using motion app.
-title: ctrlx-linrob
+title: ctrlx-webserver
 description: |
-  Webserver user interface to command a cartesian robot using ctrlX official motion app. Demo example from DCEM for LinRob.
+  Webserver user interface to command a cartesian robot using ctrlX official motion app. 
 base: core22
 confinement: strict
 grade: stable

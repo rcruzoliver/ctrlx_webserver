@@ -61,9 +61,9 @@ bfbs_file = root_path + "/bfbs/robotActualValues.bfbs"
 mddb_file = root_path + "/mddb/metadata.mddb"
 
 # addresses of provided values
-address_base = "sdk-py-provider/"
+address_base = "webserver/"
 
-bp = Blueprint('lin-rob',__name__, static_folder=static_path, template_folder=template_path)
+bp = Blueprint('webserver',__name__, static_folder=static_path, template_folder=template_path)
 
 datalayer_system = ctrlxdatalayer.system.System("")
 datalayer_system.start(False)
@@ -99,12 +99,16 @@ def index():
 def get_actual_value():
     result, data = datalayer_client.read_sync("motion/kin/Kinematics/state/values/actual")
 
-    if (result!=Result.OK ):
+    if (result == Result.OK ):
         pos_x, pos_y, pos_z = getActualValues(data)
+
+    # pos_x = 10.0
+    # pos_y = 10.0
+    # pos_z = 10.0
     
     variantFlatbuffers = setRobotActualValues(pos_x, pos_y, pos_z)
     
-    result = datalayer_client.write_sync("sdk-py-provider/actual-value", variantFlatbuffers)
+    result = datalayer_client.write_sync("webserver/actual-value", variantFlatbuffers)
     
     return jsonify({"message": [pos_x,pos_y,pos_z,11,12,True]})
 
@@ -172,8 +176,6 @@ def set_power_value_off():
     variantBoolean.set_bool8(False)
     result = datalayer_client.create_sync("motion/axs/AxisZ/cmd/power",variantBoolean)    
     
-
-    
     return jsonify({"message": "Values changed!!"})
 
 #API to stop kinematics
@@ -201,7 +203,7 @@ def set_target_value():
     return jsonify({"message": "Values changed!!"})
 
 app = Flask(__name__)
-app.register_blueprint(bp, url_prefix='/lin-rob')
+app.register_blueprint(bp, url_prefix='/webserver')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000, host='0.0.0.0', ssl_context='adhoc')

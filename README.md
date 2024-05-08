@@ -1,14 +1,49 @@
-# ctrlX Data Layer Provider
+# ctrlx-webserver
+
+May 2024, DCEM Bosch Rexroth
+
+Contact: Aria Malik Havidiansyah (ariamalik.havidiansyah@boschrexroth.de) and Raul Cruz Oliver (raul.cruz-oliver@boschrexroth.ch)
 
 ## Introduction
 
-The app demonstrates how a Data Layer connecion is established and a string and flatbuffers node are provided.
+This repository contains the source code to build your own custom user interface based on a Python Flask webserver. The webserver communicates with the official ctrlX Motion app though the datalayer.
+
+In the following image one can see an overview of the system topology. 
+
+![alt text](docs/images/overview.png)
+
+As presented in the image, the custom webserver is available through the port 5000. 
+
+For complementary, we are showing that the basic web interface provided by ctrlX OS is available in the port 8443.
+
+### Target platform
+This example has been developped for ctrlX OS 2.4, in which the official 2.4 version of the Motion App has been installed.
+
+**NOTE:** In version 2.6 there would be substancial changes in the way metadata is managed, we will provide an example for this new ctrlX OS as soon at is available in a different branch in this repository. Stay tuned!
+
+## File description
+
+## Implementation information
+
+### Flatbuffers
+
+### Metadata
 
 ## Function Description
+
+### ctrlX OS setup
+
+### Webserver functionalities
+
+
+
 
 The app connects to the ctrlX Data Layer and provides a string and flatbuffers node .
 
 If the Data Layer connection breaks the app will exit. After 10s it will be automatically restarted by snapd.
+
+
+
 
 ## Implementation Description
 
@@ -39,26 +74,3 @@ The generated code is stored in sample/schema/InertialValue.py
 
 ___
 
-## License
-
-MIT License
-
-Copyright (c) 2021 Bosch Rexroth AG
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
