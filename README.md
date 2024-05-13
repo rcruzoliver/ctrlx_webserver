@@ -95,57 +95,48 @@ we find three types of flatbuffer related files in ctrlX:
 
 If we are working with flatbuffers already defined by ctrlX, we can find the .bfbs and rhe python libraries in the official SDK. We suggest copying the required  pytho libraries, organised in folders in the sdk, directly to the project root. As an example, you can see what we did with the because theumotion/core/xxx. Note that you do not need the .bfbs because they are already installed in the ctrlX. 
 
-If you want to work with a custom flatbuffer, you will need first to define in the .fbs file, placing it in the flatbuffers/ folder. Then, you need to generate the .bfbs and the python libraries. We have set up a .sh, called "make-bfbs-pyfbs.sh
+If you want to work with a custom flatbuffer, you will need first to define it in the .fbs file, placing it in the "flatbuffers/" folder. Then, you need to generate the .bfbs and the python libraries. We have set up a .sh, called "make-bfbs-pyfbs.sh" that exposes the commands to do so, modify it for your needs. Once you execute those commands, you will get a .bfbs in the "/bfbs" directory, and python libraries in the root of the project. The /"bfbs/" will be dumped in the snap, and ctrlX OS will recognise the datatype.
+
+#### .fbs file explanation
+
+The .fbs file contains 3 main parts. Let's see those in the custom flatbuffer robotActualValues.fbs
+
+```json
+namespace robot.core.fbtypes;
+```
+
+This defines the structure for the python libraries that will be generated. The definition showed in the snipped will generate the python libraries inside a directory /motion/core/fbtypes. You can see other examples with the ctrlX already defined types
+
+```json
+/// actual values of the kinematics
+table RobotActualValues {
+
+  /// actual position
+  actualPosX:double;
+
+  actualPosY:double;
+  
+  actualPosZ:double;
+}
+```
+This is the actual definition of the message and its name, in this case a concatenation of 3 double called RobotActualValues.
+
+```json
+root_type RobotActualValues;
+```
+This exposes the type name. For consistency, it is suggested to refer here with the flatbuffer definition gives in the previous part.
 
 ### Metadata
 Nodes created in the datalayer might be complemented with metadata information. It specifies the data type of the information stored there, the access rights (read, write, etc.) among other features.
 
-Until ctrlX OS 2.4, itself included, metadata is specified by the developper in a .csv file that must then be compiled using the process exposed in ./make-mddb.sh into a binary file with extension .mddb. Such compiled file must be stored in a directory called "mddb", which is utimately dumped into the snap.
+Until ctrlX OS 2.4, itself included, metadata is specified by the developper in a .csv file that must then be compiled using the process exposed in "./make-mddb.sh" into a binary file with extension .mddb. Modify the .sh file if needed. Such compiled file must be stored in a directory called "mddb", which is utimately dumped into the snap.
 
 This above described procedure has been depreceated from ctrlX OS 2.6 onwards, where metadata will be directly specified in the node provider implementation. Stay tuned for an update of this project when this feature is available!
 
 ## Function Description
-
-### ctrlX OS setup
-
-### Webserver functionalities
+This is defined in the ctrlX Community post that can be found in the following [link](https://developer.community.boschrexroth.com/t5/ctrlX-Author-Team-Articles/SDK-Python-webserver-custom-User-Interface-for-Motion-App/ba-p/94933)
 
 
 
 
-The app connects to the ctrlX Data Layer and provides a string and flatbuffers node .
-
-If the Data Layer connection breaks the app will exit. After 10s it will be automatically restarted by snapd.
-
-
-
-
-## Implementation Description
-
-### Compile Flatbuffers Schema
-
-This app uses a flatbuffer defined in the schema file sampleSchema.fbs. From this schema file we have to create a binary file which is registered on the ctrlX and a Python class to create and access the defined flatbuffer data. These tasks can be done with the command line tool flatc.
-
-This tool is provided by this SDK under /bin/oss.flatbuffers/..insert OS version here../release/
-
-Do following steps - OS version here is 'linux-gcc-x64':
-
-* Create a binary flatbuffers file:
-
-    ../../bin/oss.flatbuffers/linux-gcc-x64/release/flatc -o bfbs/ -b --schema sampleSchema.fbs
-
-* Generate the Python code:
-
-    ../../bin/oss.flatbuffers/linux-gcc-x64/release/flatc --python sampleSchema.fbs
-
-The generated code is stored in sample/schema/InertialValue.py
-
-### Modules
-
-* The module __main.py__ manages the Data Layer connection and the creation of the Data Layer nodes.
-* The module __app/my_provider_node.py__ contains the class MyProviderNode with the callback function needed by the Data Layer.
-* The file __sampleSchema.fbs__ contains the schema for the flatbuffers data struct used by this app.
-* The module __sample/schema/InertialValue.py__ is generated by flatc from sampleSchema.fbs. It is used to manage the flatbuffers data struct.
-
-___
 
